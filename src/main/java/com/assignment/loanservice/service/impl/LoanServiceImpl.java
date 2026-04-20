@@ -10,32 +10,41 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class LoanServiceImpl implements LoanService {
 
-	private static final Logger log = LoggerFactory.getLogger(LoanServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(LoanServiceImpl.class);
 
-	private final LoanApiClient loanApiClient;
+    private final LoanApiClient loanApiClient;
 
-	@Override
-	public LoanDTO getLoanDetails(String loanAccountNumber) {
+    @Override
+    public LoanDTO getLoanDetails(String loanAccountNumber) {
 
-		log.info("Fetching loan details for: {}", loanAccountNumber);
+        log.info("Fetching loan details for: {}", loanAccountNumber);
 
-		LoanApiResponseDTO apiResponse = loanApiClient.fetchLoanDetails(loanAccountNumber);
+        LoanApiResponseDTO apiResponse =
+                loanApiClient.fetchLoanDetails(loanAccountNumber);
 
-		EmiDetailDTO dueEmi = apiResponse.getEmiDetails().stream().filter(EmiDetailDTO::getDueStatus).findFirst()
-				.orElse(null);
+        //filter all due EMIs
+        List<LoanDTO.LoanDetail> dueEmis = apiResponse.getEmiDetails()
+                .stream()
+                .filter(EmiDetailDTO::getDueStatus)
+                .map(emi -> {
+                    LoanDTO.LoanDetail detail = new LoanDTO.LoanDetail();
+                    detail.setDueDate(emi.getMonth());
+                    detail.setEmiAmount(emi.getEmiAmount());
+                    return detail;
+                })
+                .collect(Collectors.toList());
 
-		LoanDTO response = new LoanDTO();
-		response.setLoanAccountNumber(apiResponse.getLoanAccountNumber());
+        LoanDTO response = new LoanDTO();
+        response.setLoanAccountNumber(apiResponse.getLoanAccountNumber());
+        response.setLoanDetails(dueEmis);
 
-		if (dueEmi != null) {
-			response.setDueDate(dueEmi.getMonth());
-			response.setEmiAmount(dueEmi.getEmiAmount());
-		}
-
-		return response;
-	}
+        return response;
+    }
 }
