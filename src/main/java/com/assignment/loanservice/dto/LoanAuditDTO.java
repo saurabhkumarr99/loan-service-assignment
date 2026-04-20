@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 /**
  * DTO for exposing loan audit data via API.
  */
@@ -18,6 +20,6 @@ public class LoanAuditDTO {
 
 	private Long id;
 	private String loanAccountNumber;
-	private String responseJson;
+	private JsonNode responseJson;
 	private LocalDateTime createdAt;
 }
