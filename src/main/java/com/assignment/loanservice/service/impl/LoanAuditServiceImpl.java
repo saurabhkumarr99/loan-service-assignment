@@ -1,6 +1,7 @@
 package com.assignment.loanservice.service.impl;
 
 import com.assignment.loanservice.dto.LoanAuditDTO;
+import com.assignment.loanservice.exception.LoanDetailNotFoundException;
 import com.assignment.loanservice.model.LoanAudit;
 import com.assignment.loanservice.repository.LoanAuditRepository;
 import com.assignment.loanservice.service.LoanAuditService;
@@ -53,5 +54,23 @@ public class LoanAuditServiceImpl implements LoanAuditService {
 				.map(audit -> LoanAuditDTO.builder().id(audit.getId()).loanAccountNumber(audit.getLoanAccountNumber())
 						.responseJson(audit.getResponseJson()).createdAt(audit.getCreatedAt()).build())
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<LoanAuditDTO> getAuditByLoanAccountNumber(String loanAccountNumber) {
+
+		log.info("Fetching audit logs for loanAccountNumber: {}", loanAccountNumber);
+
+		List<LoanAuditDTO> audits = loanAuditRepository.findByLoanAccountNumber(loanAccountNumber).stream()
+				.map(audit -> LoanAuditDTO.builder().id(audit.getId()).loanAccountNumber(audit.getLoanAccountNumber())
+						.responseJson(audit.getResponseJson()).createdAt(audit.getCreatedAt()).build())
+				.collect(Collectors.toList());
+
+		// If no data found, throw exception
+		if (audits.isEmpty()) {
+			throw new LoanDetailNotFoundException("No audit records found for loanAccountNumber: " + loanAccountNumber);
+		}
+
+		return audits;
 	}
 }

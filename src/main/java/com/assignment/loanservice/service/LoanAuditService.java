@@ -18,6 +18,14 @@ public interface LoanAuditService {
     List<LoanAuditDTO> getAllAuditLogs();
 
     /**
+     * Fetch audit logs for a specific loan account number.
+     *
+     * @param loanAccountNumber loan account number
+     * @return filtered audit logs for given account
+     */
+    List<LoanAuditDTO> getAuditByLoanAccountNumber(String loanAccountNumber);
+    
+    /**
      * Save loan API response into audit table.
      *
      * @param loanAccountNumber loan account number
