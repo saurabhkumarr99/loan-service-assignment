@@ -3,6 +3,7 @@ package com.assignment.loanservice.service.impl;
 import com.assignment.loanservice.dto.EmiDetailDTO;
 import com.assignment.loanservice.dto.LoanApiResponseDTO;
 import com.assignment.loanservice.dto.LoanDTO;
+import com.assignment.loanservice.dto.LoanDTO.LoanDetail;
 import com.assignment.loanservice.integration.LoanApiClient;
 import com.assignment.loanservice.service.LoanAuditService;
 import com.assignment.loanservice.service.LoanService;
@@ -42,7 +43,7 @@ public class LoanServiceImpl implements LoanService {
 		}
 
 		// filter all due EMIs
-		List<LoanDTO.LoanDetail> dueEmis = apiResponse.getEmiDetails().stream().filter(EmiDetailDTO::getDueStatus)
+		List<LoanDetail> dueEmis = apiResponse.getEmiDetails().stream().filter(EmiDetailDTO::getDueStatus)
 				.map(emi -> {
 					LoanDTO.LoanDetail detail = new LoanDTO.LoanDetail();
 					detail.setDueDate(emi.getMonth());
