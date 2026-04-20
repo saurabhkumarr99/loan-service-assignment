@@ -45,7 +45,7 @@ public class LoanServiceImpl implements LoanService {
 		// filter all due EMIs
 		List<LoanDetail> dueEmis = apiResponse.getEmiDetails().stream().filter(EmiDetailDTO::getDueStatus)
 				.map(emi -> {
-					LoanDTO.LoanDetail detail = new LoanDTO.LoanDetail();
+					LoanDetail detail = new LoanDetail();
 					detail.setDueDate(emi.getMonth());
 					detail.setEmiAmount(emi.getEmiAmount());
 					return detail;
