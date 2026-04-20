@@ -26,8 +26,7 @@ public class LoanServiceImpl implements LoanService {
 
         log.info("Fetching loan details for: {}", loanAccountNumber);
 
-        LoanApiResponseDTO apiResponse =
-                loanApiClient.fetchLoanDetails(loanAccountNumber);
+        LoanApiResponseDTO apiResponse = loanApiClient.fetchLoanDetails(loanAccountNumber);
 
         //filter all due EMIs
         List<LoanDTO.LoanDetail> dueEmis = apiResponse.getEmiDetails()

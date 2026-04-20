@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
  * REST controller for loan-related APIs.
  */
 @RestController
-@RequestMapping("/loan")
+@RequestMapping("/loanAccount")
 @RequiredArgsConstructor
 @Validated
 public class LoanController {
